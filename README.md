@@ -1,6 +1,6 @@
 # 📚 PAW Project — Laravel + React (Inertia.js)
 
-> Proyek ini menggunakan **Laravel** (backend) + **React + TypeScript** (frontend) yang dihubungkan menggunakan **Inertia.js**. Ikuti panduan ini secara berurutan agar project bisa berjalan di komputer kamu.
+> Proyek ini menggunakan **Laravel** (backend) + **React + JavaScript** (frontend) yang dihubungkan menggunakan **Inertia.js**. Ikuti panduan ini secara berurutan agar project bisa berjalan di komputer kamu.
 
 ---
 
@@ -28,7 +28,7 @@ Buka terminal (Git Bash / PowerShell / CMD), lalu jalankan:
 
 ```bash
 git clone https://github.com/USERNAME/NAMA-REPO.git
-cd NAMA-REPO
+cd NAMA-REPO/paw-project
 ```
 
 > Ganti `USERNAME` dan `NAMA-REPO` dengan link repository GitHub kalian.
@@ -316,40 +316,29 @@ Route::post('/products', [ProductController::class, 'store'])->name('products.st
 
 ### 4️⃣ Buat Halaman React (UI)
 
-Halaman frontend ada di folder `resources/js/pages/`. Buat folder dan file baru sesuai fitur:
+Halaman frontend ada di folder `resources/js/pages/`. Buat folder dan file baru sesuai fitur dengan ekstensi **`.jsx`**:
 
 **Struktur folder:**
 ```
 resources/js/
 ├── pages/
 │   ├── Product/
-│   │   ├── Index.tsx      ← Halaman daftar produk
-│   │   ├── Create.tsx     ← Halaman form tambah produk
-│   │   └── Show.tsx       ← Halaman detail produk
-│   └── Dashboard.tsx
+│   │   ├── Index.jsx      ← Halaman daftar produk
+│   │   ├── Create.jsx     ← Halaman form tambah produk
+│   │   └── Show.jsx       ← Halaman detail produk
+│   └── Dashboard.jsx
 ├── components/            ← Komponen UI yang bisa dipakai ulang (tombol, card, dll)
 ├── layouts/               ← Layout utama (header, sidebar, dll)
-├── hooks/                 ← Custom React hooks
-└── types/                 ← Definisi TypeScript (interface/type)
+└── hooks/                 ← Custom React hooks
 ```
 
-**Contoh `resources/js/pages/Product/Index.tsx`:**
+**Contoh `resources/js/pages/Product/Index.jsx`:**
 
-```tsx
+```jsx
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 
-interface Product {
-    id: number;
-    name: string;
-    price: number;
-}
-
-interface Props {
-    products: Product[];
-}
-
-export default function ProductIndex({ products }: Props) {
+export default function ProductIndex({ products }) {
     return (
         <AppLayout>
             <Head title="Produk" />
@@ -394,8 +383,7 @@ paw-project/
 │       ├── pages/          ← Halaman-halaman React (dirender oleh Inertia)
 │       ├── components/     ← Komponen UI yang bisa dipakai ulang
 │       ├── layouts/        ← Layout halaman (AppLayout, AuthLayout, dll)
-│       ├── hooks/          ← Custom React hooks
-│       └── types/          ← TypeScript type/interface
+│       └── hooks/          ← Custom React hooks
 │
 ├── routes/
 │   └── web.php             ← Semua route web didefinisikan di sini
