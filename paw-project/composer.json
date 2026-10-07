@@ -51,7 +51,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "bash -c 'PATH=\"$(pwd)/node_modules/.bin:$PATH\" php artisan dev'"
+            "php artisan dev"
         ],
         "lint": [
             "pint --parallel"
