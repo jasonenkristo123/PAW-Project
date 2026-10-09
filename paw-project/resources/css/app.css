@@ -17,6 +17,79 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
 
+    /* Agendain palette: use bg-*, text-*, border-*, ring-* and outline-*.
+       Example: bg-agendain-purple hover:bg-agendain-purple-hover.
+       Opacity uses Tailwind modifiers, e.g. ring-agendain-purple/20. */
+
+    /* Agendain brand — primary buttons, links, hover and keyboard focus */
+    --color-agendain-purple: #6236e8;
+    --color-agendain-purple-hover: #5127cf;
+    --color-agendain-purple-muted: #6650b8;
+    --color-agendain-focus: #a78bfa;
+    --color-agendain-icon-accent: #8a72bb;
+    --color-agendain-decoration: #b4a0d2;
+    --color-agendain-shadow: #432369;
+
+    /* Shared surfaces and cool text — auth forms and landing hero */
+    --color-agendain-white: #ffffff;
+    --color-agendain-page: #fdf8ff;
+    --color-agendain-surface-soft: #faf5ff;
+    --color-agendain-surface-hover: #faf8ff;
+    --color-agendain-badge: #f5f0ff;
+    --color-agendain-heading: #161518;
+    --color-agendain-text: #242228;
+    --color-agendain-text-muted: #625e6d;
+    --color-agendain-placeholder: #a39caf;
+    --color-agendain-icon-muted: #aaa1b9;
+
+    /* Cool borders — cards, inputs, checkboxes and secondary buttons */
+    --color-agendain-border-card: #eee7f4;
+    --color-agendain-border-input: #ddd5e9;
+    --color-agendain-border-checkbox: #ccc0df;
+    --color-agendain-border-button: #eae7ef;
+    --color-agendain-border-button-hover: #d6c9f7;
+    --color-agendain-border-header: #f0edf4;
+
+    /* Warm landing palette — navigation, feature copy and dark buttons */
+    --color-landing-ink: #242322;
+    --color-landing-ink-hover: #45413d;
+    --color-landing-text: #4b4845;
+    --color-landing-text-muted: #77716b;
+    --color-landing-eyebrow: #8a8077;
+    --color-landing-caption: #8d877f;
+    --color-landing-label: #a2998d;
+    --color-landing-border: #e6e1d9;
+    --color-landing-border-feature: #d9d3cb;
+    --color-landing-border-menu: #eae7e2;
+    --color-landing-section: #f3f0e9;
+
+    /* Paper illustration — sheet, ruled lines, margin and checkbox outlines */
+    --color-paper-surface: #fdfcf9;
+    --color-paper-border: #d6d0c6;
+    --color-paper-rule: #e9e3d9;
+    --color-paper-margin: #dccfc7;
+    --color-paper-checkbox: #9b9285;
+    --color-paper-step-border: #d5cdc1;
+    --color-paper-shadow: #e3ddd2;
+
+    /* Rotating hero highlights — background and matching text pairs */
+    --color-highlight-purple: #f0eaff;
+    --color-highlight-amber: #fff0d9;
+    --color-highlight-amber-text: #995b13;
+    --color-highlight-teal: #dff3ef;
+    --color-highlight-teal-text: #237b70;
+
+    /* Feedback — reuse Tailwind's standard success green */
+    --color-agendain-success: var(--color-green-700);
+
+    /* Shadows — complete values keep geometry and tint together */
+    --shadow-agendain-button: 0 4px 10px
+        color-mix(in srgb, var(--color-agendain-purple) 20%, transparent);
+    --shadow-agendain-card: 0 8px 32px
+        color-mix(in srgb, var(--color-agendain-shadow) 4%, transparent);
+    --shadow-paper: 7px 8px 0 var(--color-paper-shadow);
+
+    /* Existing UI component tokens — preserve the starter's semantic palette */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
     --color-bg-primary: var(--bg-primary);
@@ -46,12 +119,14 @@
     --color-input: var(--input);
     --color-ring: var(--ring);
 
+    /* Charts */
     --color-chart-1: var(--chart-1);
     --color-chart-2: var(--chart-2);
     --color-chart-3: var(--chart-3);
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
 
+    /* Sidebar */
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar-primary: var(--sidebar-primary);
@@ -64,7 +139,8 @@
 
 :root {
     --background: oklch(1 0 0);
-    --bg-primary: #FDF8FF;
+    /* Compatibility alias for existing bg-bg-primary utilities. */
+    --bg-primary: var(--color-agendain-page);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
