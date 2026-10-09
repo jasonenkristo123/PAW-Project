@@ -152,7 +152,7 @@ git pull origin main
 
 #### Step 2 — Buat branch baru untuk fitur kamu
 
-Nama branch gunakan format: `feature/nama-fitur`
+Nama branch gunakan format: `feat/nama-fitur`
 
 ```bash
 git checkout -b feature/nama-fitur
@@ -160,9 +160,9 @@ git checkout -b feature/nama-fitur
 
 Contoh:
 ```bash
-git checkout -b feature/halaman-produk
-git checkout -b feature/tambah-keranjang
-git checkout -b feature/login-google
+git checkout -b feat/halaman-produk
+git checkout -b feat/tambah-keranjang
+git checkout -b feat/login-google
 ```
 
 #### Step 3 — Kerjakan fiturnya, lalu simpan perubahan
