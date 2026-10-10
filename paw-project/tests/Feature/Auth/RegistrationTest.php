@@ -3,6 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Laravel\Fortify\Features;
 use Tests\TestCase;
 
@@ -26,6 +27,8 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register()
     {
+        Notification::fake();
+
         $response = $this->post(route('register.store'), [
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -33,7 +36,11 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $this->assertGuest();
+        $this->assertDatabaseHas('users', ['email' => 'test@example.com']);
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHas('status', 'Account created successfully. Please sign in.');
+        $this->get(route('login'))->assertOk();
+        Notification::assertNothingSent();
     }
 }

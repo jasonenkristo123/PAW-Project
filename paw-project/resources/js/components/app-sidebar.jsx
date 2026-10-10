@@ -1,5 +1,6 @@
-import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { BookOpen, FolderGit2, LayoutGrid, MapPin } from 'lucide-react';
+import { index as venuesIndex } from '@/routes/admin/venues';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -34,6 +35,14 @@ const footerNavItems = [
     },
 ];
 export function AppSidebar() {
+    const { auth } = usePage().props;
+    const items =
+        auth.user?.role === 'admin'
+            ? [
+                  ...mainNavItems,
+                  { title: 'Manage venues', href: venuesIndex(), icon: MapPin },
+              ]
+            : mainNavItems;
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -49,7 +58,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={items} />
             </SidebarContent>
 
             <SidebarFooter>

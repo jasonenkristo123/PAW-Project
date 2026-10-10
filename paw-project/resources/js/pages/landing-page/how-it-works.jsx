@@ -69,9 +69,7 @@ export default function HowItWorks({ actionHref, authenticated }) {
                         href={actionHref}
                         className="inline-flex items-center gap-[7px] text-[13px] font-semibold text-landing-ink hover:text-agendain-purple-muted"
                     >
-                        {authenticated
-                            ? 'Go to your dashboard'
-                            : 'Let’s make a plan'}{' '}
+                        {authenticated ? 'Explore events' : 'Let’s make a plan'}{' '}
                         <ArrowRight size={17} />
                     </Link>
                 </div>

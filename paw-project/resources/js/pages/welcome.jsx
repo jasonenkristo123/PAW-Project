@@ -1,5 +1,6 @@
 import { Head, usePage } from '@inertiajs/react';
-import { dashboard, register } from '@/routes';
+import { register } from '@/routes';
+import { index as eventsIndex } from '@/routes/events';
 import Navbar from '@/pages/landing-page/navbar';
 import HeroSection from '@/pages/landing-page/hero-section';
 import FeaturesSection from '@/pages/landing-page/features-section';
@@ -9,7 +10,7 @@ import Footer from '@/pages/landing-page/footer';
 export default function Welcome() {
     const { auth } = usePage().props;
     const authenticated = Boolean(auth?.user);
-    const actionHref = authenticated ? dashboard() : register();
+    const actionHref = authenticated ? eventsIndex() : register();
 
     return (
         <div className="min-h-svh bg-agendain-white font-sans text-landing-ink [&_*]:box-border [&_a]:no-underline [&_a:focus-visible]:outline-3 [&_a:focus-visible]:outline-offset-5 [&_a:focus-visible]:outline-agendain-focus [&_button:focus-visible]:outline-3 [&_button:focus-visible]:outline-offset-5 [&_button:focus-visible]:outline-agendain-focus">
@@ -25,7 +26,7 @@ export default function Welcome() {
             >
                 Skip to content
             </a>
-            <Navbar authenticated={authenticated} />
+            <Navbar />
             <main id="main-content">
                 <HeroSection
                     actionHref={actionHref}
