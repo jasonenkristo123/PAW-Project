@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, FolderGit2, LayoutGrid, MapPin } from 'lucide-react';
-import { index as venuesIndex } from '@/routes/admin/venues';
+import { dashboard as adminDashboard } from '@/routes/admin';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -40,7 +40,7 @@ export function AppSidebar() {
         auth.user?.role === 'admin'
             ? [
                   ...mainNavItems,
-                  { title: 'Manage venues', href: venuesIndex(), icon: MapPin },
+                  { title: 'Admin', href: adminDashboard(), icon: MapPin },
               ]
             : mainNavItems;
     return (

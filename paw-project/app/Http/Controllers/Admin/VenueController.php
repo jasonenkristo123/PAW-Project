@@ -115,7 +115,7 @@ class VenueController extends Controller
         // Use the canonical index URL for pagination, including on modal routes.
         $venues->withPath(route('admin.venues.index'));
 
-        return Inertia::render('admin/venues/index', [
+        return Inertia::render('admin/venues', [
             'venues' => $venues,
             'filters' => ['search' => $search, 'status' => $status],
             'stats' => [

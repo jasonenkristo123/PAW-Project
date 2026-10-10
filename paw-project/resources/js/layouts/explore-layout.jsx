@@ -19,7 +19,7 @@ import { useFlashToast } from '@/hooks/use-flash-toast';
 import { home } from '@/routes';
 import { index as eventsIndex } from '@/routes/events';
 import { index as bookingsIndex } from '@/routes/bookings';
-import { index as adminIndex } from '@/routes/admin/venues';
+import { dashboard as adminIndex } from '@/routes/admin';
 
 export default function ExploreLayout({ children }) {
     const {

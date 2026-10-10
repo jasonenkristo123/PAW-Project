@@ -14,7 +14,7 @@ $user->role = App\Models\User::ROLE_ADMIN;
 $user->save();
 ```
 
-Sign in with that account, then open `/admin/venues`. The admin link appears on the landing page and the regular app sidebar only for administrators. `/admin` redirects to venue management. Guest requests redirect to login, and every authenticated non-admin request receives HTTP 403, including create/update/delete requests.
+Sign in with that account, then open `/admin/venues`. The admin link opens the booking dashboard at `/admin` and appears only for administrators. Venues remains a separate management page. Guest requests redirect to login, and every authenticated non-admin request receives HTTP 403, including create/update/delete requests.
 
 ## Backend
 
@@ -27,7 +27,7 @@ Sign in with that account, then open `/admin/venues`. The admin link appears on 
 
 ## Frontend
 
-The page lives in `resources/js/pages/admin/venues/index.jsx`, using `resources/js/layouts/admin-layout.jsx`. It includes a responsive sidebar, database-backed overview cards, search/filter controls, pagination, accessible dialogs, inline validation, and confirmation before deletion. Available/unavailable map to the existing `active`/`inactive` database values.
+The page lives in `resources/js/pages/admin/venues.jsx`, using `resources/js/layouts/admin-layout.jsx`. It includes a responsive sidebar, database-backed overview cards, search/filter controls, pagination, accessible dialogs, inline validation, and confirmation before deletion. Available/unavailable map to the existing `active`/`inactive` database values.
 
 Create, detail, and edit resource URLs render the same table with the appropriate dialog, so they can be bookmarked and opened directly. The detail dialog includes up to five recent events. Other management sections are shown as upcoming sections; this change implements venue management.
 

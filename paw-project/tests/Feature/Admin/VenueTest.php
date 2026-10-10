@@ -62,7 +62,7 @@ class VenueTest extends TestCase
             ->get(route('admin.venues.index'))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
-                ->component('admin/venues/index')
+                ->component('admin/venues')
                 ->has('venues.data', 6)
                 ->where('venues.total', 8)
                 ->where('venues.last_page', 2)
@@ -100,15 +100,15 @@ class VenueTest extends TestCase
         $this->actingAs(User::factory()->admin()->create());
 
         $this->get(route('admin.venues.create'))->assertInertia(fn (Assert $page) => $page
-            ->component('admin/venues/index')->where('dialog.mode', 'create')->where('dialog.venue', null));
+            ->component('admin/venues')->where('dialog.mode', 'create')->where('dialog.venue', null));
 
         $this->get(route('admin.venues.show', $venue))->assertInertia(fn (Assert $page) => $page
-            ->component('admin/venues/index')->where('dialog.mode', 'show')
+            ->component('admin/venues')->where('dialog.mode', 'show')
             ->where('dialog.venue.id', $venue->id)->where('dialog.venue.events_count', 1)
             ->has('dialog.venue.events', 1)->where('dialog.venue.events.0.title', 'Workshop'));
 
         $this->get(route('admin.venues.edit', $venue))->assertInertia(fn (Assert $page) => $page
-            ->component('admin/venues/index')->where('dialog.mode', 'edit')->where('dialog.venue.id', $venue->id));
+            ->component('admin/venues')->where('dialog.mode', 'edit')->where('dialog.venue.id', $venue->id));
     }
 
     public function test_admin_can_create_a_venue_using_only_validated_fields(): void
@@ -190,10 +190,11 @@ class VenueTest extends TestCase
             ->get(route('admin.venues.index'))->assertForbidden();
     }
 
-    public function test_admin_root_routes_to_venue_management(): void
+    public function test_admin_root_renders_the_booking_dashboard(): void
     {
         $this->actingAs(User::factory()->admin()->create())
-            ->get(route('admin.dashboard'))->assertRedirect(route('admin.venues.index'));
+            ->get(route('admin.dashboard'))->assertOk()->assertInertia(fn (Assert $page) => $page
+            ->component('admin/dashboard')->has('bookings.data', 0));
     }
 
     /** @return array<string, mixed> */

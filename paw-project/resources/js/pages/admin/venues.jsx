@@ -440,7 +440,7 @@ export default function Venues({ venues, filters, stats, dialog }) {
                         AGENDAIN · PLATFORM MANAGEMENT
                     </p>
                     <h1 className="text-lg font-semibold tracking-tight">
-                        Admin Management Dashboard
+                        Venue Administration
                     </h1>
                 </div>
                 <span className="inline-flex items-center gap-2 rounded-full bg-agendain-badge px-3 py-1.5 text-[11px] text-agendain-text-muted">

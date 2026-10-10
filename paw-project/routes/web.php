@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\ExploreController;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +17,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::redirect('/', '/admin/venues')->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('bookings', [DashboardController::class, 'index'])->name('bookings.index');
+    Route::get('bookings/export', [DashboardController::class, 'export'])->name('bookings.export');
+    Route::get('bookings/{booking}', [DashboardController::class, 'show'])->name('bookings.show');
+    Route::patch('bookings/{booking}', [DashboardController::class, 'update'])->name('bookings.update');
+    Route::delete('bookings/{booking}', [DashboardController::class, 'destroy'])->name('bookings.destroy');
     Route::resource('venues', VenueController::class);
 });
 

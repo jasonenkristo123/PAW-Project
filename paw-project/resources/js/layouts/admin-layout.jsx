@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
 import {
     Building2,
+    ArrowLeft,
     CalendarDays,
     LayoutDashboard,
     LogOut,
@@ -15,15 +16,22 @@ import { useState } from 'react';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import { logout } from '@/routes';
 import { index } from '@/routes/admin/venues';
+import { dashboard } from '@/routes/admin';
+import { index as bookingsIndex } from '@/routes/admin/bookings';
+import { index as eventsIndex } from '@/routes/events';
 
 const pendingSections = [
     { title: 'Events', icon: CalendarDays },
     { title: 'Categories', icon: Shapes },
-    { title: 'Bookings', icon: ReceiptText },
 ];
 
 export default function AdminLayout({ children }) {
-    const { auth } = usePage().props;
+    const {
+        props: { auth },
+        url,
+    } = usePage();
+    const venuesActive = url.startsWith('/admin/venues');
+    const dashboardActive = !venuesActive;
     const [menuOpen, setMenuOpen] = useState(false);
     useFlashToast();
 
@@ -41,7 +49,7 @@ export default function AdminLayout({ children }) {
             >
                 <div className="flex h-20 items-center justify-between border-b border-agendain-border-header px-6">
                     <Link
-                        href={index()}
+                        href={dashboard()}
                         className="leading-tight"
                         onClick={() => setMenuOpen(false)}
                     >
@@ -69,9 +77,15 @@ export default function AdminLayout({ children }) {
                         PLATFORM MANAGEMENT
                     </p>
                     <Link
-                        href={`${index.url()}#overview`}
+                        href={dashboard()}
+                        aria-current={
+                            dashboardActive &&
+                            !url.startsWith('/admin/bookings')
+                                ? 'page'
+                                : undefined
+                        }
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm hover:bg-agendain-surface-soft"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm ${dashboardActive && !url.startsWith('/admin/bookings') ? 'bg-agendain-badge font-semibold text-agendain-purple' : 'hover:bg-agendain-surface-soft'}`}
                     >
                         <LayoutDashboard size={17} /> Dashboard
                     </Link>
@@ -92,28 +106,35 @@ export default function AdminLayout({ children }) {
                         ))}
                     <Link
                         href={index()}
-                        aria-current="page"
+                        aria-current={venuesActive ? 'page' : undefined}
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 rounded-lg bg-agendain-badge px-3 py-3 text-sm font-semibold text-agendain-purple"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm ${venuesActive ? 'bg-agendain-badge font-semibold text-agendain-purple' : 'hover:bg-agendain-surface-soft'}`}
                     >
                         <MapPin size={17} /> Venues{' '}
-                        <span className="ml-auto h-1.5 w-1.5 rounded-full bg-agendain-purple" />
+                        {venuesActive && (
+                            <span className="ml-auto h-1.5 w-1.5 rounded-full bg-agendain-purple" />
+                        )}
                     </Link>
-                    {pendingSections.slice(2).map(({ title, icon: Icon }) => (
-                        <span
-                            key={title}
-                            aria-disabled="true"
-                            className="flex items-center gap-3 px-3 py-3 text-sm text-agendain-text-muted"
-                        >
-                            <Icon size={17} />
-                            {title}
-                            <span className="ml-auto text-[9px] text-agendain-placeholder">
-                                Soon
-                            </span>
-                        </span>
-                    ))}
+                    <Link
+                        href={bookingsIndex()}
+                        onClick={() => setMenuOpen(false)}
+                        aria-current={
+                            url.startsWith('/admin/bookings')
+                                ? 'page'
+                                : undefined
+                        }
+                        className={`flex items-center gap-3 rounded-lg px-3 py-3 text-sm ${url.startsWith('/admin/bookings') ? 'bg-agendain-badge font-semibold text-agendain-purple' : 'hover:bg-agendain-surface-soft'}`}
+                    >
+                        <ReceiptText size={17} /> Bookings
+                    </Link>
                 </nav>
                 <div className="border-t border-agendain-border-header p-4">
+                    <Link
+                        href={eventsIndex()}
+                        className="flex items-center gap-3 rounded-lg px-3 py-3 text-sm text-agendain-text-muted hover:bg-agendain-badge"
+                    >
+                        <ArrowLeft size={17} /> Back to events
+                    </Link>
                     <Link
                         href={logout()}
                         as="button"
