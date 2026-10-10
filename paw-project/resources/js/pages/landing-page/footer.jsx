@@ -24,7 +24,7 @@ export default function Footer({ actionHref, authenticated }) {
                     className="inline-flex items-center justify-center gap-3.5 rounded-md bg-landing-ink px-[21px] py-3.5 text-sm leading-[1.3] font-semibold text-agendain-white transition-[background,transform] duration-150 hover:-translate-y-0.5 hover:bg-landing-ink-hover motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                     {authenticated
-                        ? 'Open your dashboard'
+                        ? 'Explore events'
                         : 'Create your free account'}{' '}
                     <ArrowRight size={17} />
                 </Link>
