@@ -2,7 +2,6 @@ import { Link, usePage } from '@inertiajs/react';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { login, register } from '@/routes';
-import { dashboard as adminDashboard } from '@/routes/admin';
 import { index as eventsIndex } from '@/routes/events';
 
 export default function Navbar() {
@@ -33,14 +32,6 @@ export default function Navbar() {
                     <a href="#how-it-works">How it works</a>
                 </nav>
                 <div className="ml-auto hidden items-center gap-[25px] text-[13px] min-[701px]:flex">
-                    {auth.user?.role === 'admin' && (
-                        <Link
-                            href={adminDashboard()}
-                            className="font-semibold text-agendain-purple"
-                        >
-                            Admin workspace
-                        </Link>
-                    )}
                     <Link
                         href={auth.user ? eventsIndex() : login()}
                         className="text-landing-text hover:text-agendain-purple-muted"
@@ -80,9 +71,6 @@ export default function Navbar() {
                     <Link href={auth.user ? eventsIndex() : login()}>
                         {auth.user ? 'Explore events' : 'Log in'}
                     </Link>
-                    {auth.user?.role === 'admin' && (
-                        <Link href={adminDashboard()}>Admin workspace</Link>
-                    )}
                     <Link href={auth.user ? eventsIndex() : register()}>
                         {auth.user ? 'Make a plan' : 'Register'}{' '}
                         <ArrowUpRight size={16} />

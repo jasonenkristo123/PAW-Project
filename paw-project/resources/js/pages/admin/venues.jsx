@@ -38,6 +38,10 @@ import {
     store,
     update,
 } from '@/routes/admin/venues';
+import { dashboard as adminDashboard } from '@/routes/admin';
+import { index as bookingsIndex } from '@/routes/admin/bookings';
+import { index as categoriesIndex } from '@/routes/admin/categories';
+import { index as eventsIndex } from '@/routes/admin/events';
 
 const primaryButton =
     'bg-agendain-purple text-white shadow-agendain-button hover:bg-agendain-purple-hover';
@@ -483,18 +487,29 @@ export default function Venues({ venues, filters, stats, dialog }) {
                 )}
             </section>
             <div className="flex flex-wrap items-center gap-2 rounded-xl bg-agendain-badge p-2 text-xs">
-                {metricDefinitions.map(({ key, label, icon: Icon }) => (
-                    <span
-                        key={key}
-                        className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 ${key === 'venues' ? 'bg-white font-semibold text-agendain-purple shadow-xs' : 'text-agendain-text-muted'}`}
-                    >
-                        <Icon size={13} />
-                        {label}
-                        <span className="rounded-full bg-agendain-surface-soft px-1.5 text-[10px]">
-                            {number.format(stats[key])}
-                        </span>
-                    </span>
-                ))}
+                {metricDefinitions.map(({ key, label, icon: Icon }) => {
+                    const href =
+                        key === 'events'
+                            ? eventsIndex()
+                            : key === 'categories'
+                              ? categoriesIndex()
+                              : key === 'venues'
+                                ? index()
+                                : bookingsIndex();
+                    return (
+                        <Link
+                            key={key}
+                            href={href}
+                            className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 transition-colors ${key === 'venues' ? 'bg-white font-semibold text-agendain-purple shadow-xs' : 'text-agendain-text-muted hover:text-agendain-purple'}`}
+                        >
+                            <Icon size={13} />
+                            {label}
+                            <span className="rounded-full bg-agendain-surface-soft px-1.5 text-[10px]">
+                                {number.format(stats[key])}
+                            </span>
+                        </Link>
+                    );
+                })}
             </div>
             <section
                 className="rounded-xl border border-agendain-border-card bg-white p-4 sm:p-6"
