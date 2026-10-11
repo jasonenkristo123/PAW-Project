@@ -5,9 +5,11 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\ExploreController;
+use App\Http\Controllers\LandingController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', LandingController::class)->name('home');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('events', [ExploreController::class, 'index'])->name('events.index');
@@ -16,9 +18,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('my-bookings', [ExploreController::class, 'myBookings'])->name('bookings.index');
     Route::post('my-bookings/{booking}/cancel', [ExploreController::class, 'cancel'])->name('bookings.cancel');
     Route::get('dashboard', function () {
-        if (auth()->user()?->role === \App\Models\User::ROLE_ADMIN) {
+        if (auth()->user()?->role === User::ROLE_ADMIN) {
             return redirect()->route('admin.dashboard');
         }
+
         return redirect()->route('events.index');
     })->name('dashboard');
 });

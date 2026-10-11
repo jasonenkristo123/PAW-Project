@@ -10,6 +10,7 @@ import {
     Ticket,
 } from 'lucide-react';
 import { login } from '@/routes';
+import { index as bookingsIndex } from '@/routes/bookings';
 
 const highlights = [
     { icon: CalendarDays, label: 'Events worth discovering' },
@@ -100,7 +101,7 @@ export default function HeroSection({ actionHref, authenticated }) {
                         <ArrowDown size={16} aria-hidden="true" />
                     </Link>
                     <Link
-                        href={authenticated ? actionHref : login()}
+                        href={authenticated ? bookingsIndex() : login()}
                         className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-agendain-border-button bg-agendain-white px-6 py-3 text-sm font-medium text-agendain-text transition-colors hover:border-agendain-border-button-hover hover:bg-agendain-surface-hover motion-reduce:transition-none"
                     >
                         <Bookmark

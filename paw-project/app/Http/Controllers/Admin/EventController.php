@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -43,9 +44,9 @@ class EventController extends Controller
         $event->load(['category', 'venue'])
             ->loadCount('bookings');
 
-        $event->sold_tickets = (int) $event->bookings()
+        $event->setAttribute('sold_tickets', (int) $event->bookings()
             ->whereIn('status', [Booking::STATUS_PENDING, Booking::STATUS_CONFIRMED])
-            ->sum('ticket_quantity');
+            ->sum('ticket_quantity'));
 
         return $this->renderPage($request, 'show', $event);
     }
@@ -59,7 +60,22 @@ class EventController extends Controller
 
     public function update(EventRequest $request, Event $event): RedirectResponse
     {
-        $event->update($request->validated());
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($event, $validated): void {
+            $record = Event::query()->lockForUpdate()->findOrFail($event->id);
+            $reserved = $record->bookings()
+                ->whereIn('status', [Booking::STATUS_PENDING, Booking::STATUS_CONFIRMED])
+                ->sum('ticket_quantity');
+
+            if ($validated['quota'] < $reserved) {
+                throw ValidationException::withMessages([
+                    'quota' => 'Ticket quota cannot be lower than the number of reserved tickets.',
+                ]);
+            }
+
+            $record->update($validated);
+        });
 
         Inertia::flash('toast', ['type' => 'success', 'message' => 'Event updated successfully.']);
 
@@ -128,14 +144,20 @@ class EventController extends Controller
 
         // Transform sold_tickets null to 0
         $events->through(function ($item) {
-            $item->sold_tickets = (int) ($item->sold_tickets ?? 0);
+            $item->setAttribute('sold_tickets', (int) ($item->getAttribute('sold_tickets') ?? 0));
+
             return $item;
         });
 
         return Inertia::render('admin/events', [
             'events' => $events,
-            'categories' => Category::query()->select('id', 'name')->where('status', Category::STATUS_ACTIVE)->orderBy('name')->get(),
-            'venues' => Venue::query()->select('id', 'name', 'capacity')->where('status', Venue::STATUS_ACTIVE)->orderBy('name')->get(),
+            'categories' => Category::query()->select('id', 'name', 'status')->orderBy('name')->get(),
+            'venues' => Venue::query()->select('id', 'name', 'capacity')->where(function (Builder $query) use ($event): void {
+                $query->where('status', Venue::STATUS_ACTIVE);
+                if ($event !== null) {
+                    $query->orWhereKey($event->venue_id);
+                }
+            })->orderBy('name')->get(),
             'filters' => [
                 'search' => $search,
                 'category_id' => $categoryId,
@@ -153,4 +175,3 @@ class EventController extends Controller
         ]);
     }
 }
-

@@ -6,8 +6,9 @@ import HeroSection from '@/pages/landing-page/hero-section';
 import FeaturesSection from '@/pages/landing-page/features-section';
 import HowItWorks from '@/pages/landing-page/how-it-works';
 import Footer from '@/pages/landing-page/footer';
+import UpcomingEvents from '@/pages/landing-page/upcoming-events';
 
-export default function Welcome() {
+export default function Welcome({ featuredEvents }) {
     const { auth } = usePage().props;
     const authenticated = Boolean(auth?.user);
     const actionHref = authenticated ? eventsIndex() : register();
@@ -50,6 +51,7 @@ export default function Welcome() {
                         <span>New connections</span>
                     </div>
                 </div>
+                <UpcomingEvents events={featuredEvents} />
                 <FeaturesSection />
                 <HowItWorks
                     actionHref={actionHref}

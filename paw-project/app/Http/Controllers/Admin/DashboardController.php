@@ -80,7 +80,7 @@ class DashboardController extends Controller
             $query->chunk(200, function ($bookings) use ($stream): void {
                 foreach ($bookings as $booking) {
                     $row = [
-                        $booking->booking_code, $booking->user->name, $booking->user->email,
+                        $booking->booking_code, $booking->attendee_name ?? $booking->user->name, $booking->attendee_email ?? $booking->user->email,
                         $booking->event->title, $booking->event->date->format('Y-m-d'),
                         (string) $booking->ticket_quantity, $booking->total_price,
                         $booking->booking_date->format('Y-m-d H:i:s'), $booking->status,
@@ -122,6 +122,8 @@ class DashboardController extends Controller
                 $query->where(function (Builder $query) use ($filters): void {
                     $term = '%'.$filters['search'].'%';
                     $query->where('booking_code', 'like', $term)
+                        ->orWhere('attendee_name', 'like', $term)
+                        ->orWhere('attendee_email', 'like', $term)
                         ->orWhereHas('user', fn (Builder $user) => $user->where('name', 'like', $term)->orWhere('email', 'like', $term))
                         ->orWhereHas('event', fn (Builder $event) => $event->where('title', 'like', $term));
                 });

@@ -14,6 +14,7 @@ class MigrationsTest extends TestCase
     use DatabaseMigrations;
 
     private const MIGRATIONS = [
+        'database/migrations/2026_10_11_000001_add_attendee_details_to_bookings_table.php',
         'database/migrations/2026_10_10_000001_add_event_management_fields_to_users_table.php',
         'database/migrations/2026_10_10_000002_create_categories_table.php',
         'database/migrations/2026_10_10_000003_create_venues_table.php',

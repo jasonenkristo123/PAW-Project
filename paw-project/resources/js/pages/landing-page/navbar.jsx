@@ -2,11 +2,13 @@ import { Link, usePage } from '@inertiajs/react';
 import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { login, register } from '@/routes';
+import { dashboard as adminDashboard } from '@/routes/admin';
 import { index as eventsIndex } from '@/routes/events';
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
     const { auth } = usePage().props;
+    const isAdmin = auth.user?.role === 'admin';
 
     return (
         <header className="border-b border-agendain-border-header bg-agendain-white">
@@ -32,6 +34,14 @@ export default function Navbar() {
                     <a href="#how-it-works">How it works</a>
                 </nav>
                 <div className="ml-auto hidden items-center gap-[25px] text-[13px] min-[701px]:flex">
+                    {isAdmin && (
+                        <Link
+                            href={adminDashboard()}
+                            className="text-landing-text hover:text-agendain-purple-muted"
+                        >
+                            Admin
+                        </Link>
+                    )}
                     <Link
                         href={auth.user ? eventsIndex() : login()}
                         className="text-landing-text hover:text-agendain-purple-muted"
@@ -68,6 +78,14 @@ export default function Navbar() {
                     <a href="#how-it-works" onClick={() => setOpen(false)}>
                         How it works
                     </a>
+                    {isAdmin && (
+                        <Link
+                            href={adminDashboard()}
+                            onClick={() => setOpen(false)}
+                        >
+                            Admin
+                        </Link>
+                    )}
                     <Link href={auth.user ? eventsIndex() : login()}>
                         {auth.user ? 'Explore events' : 'Log in'}
                     </Link>

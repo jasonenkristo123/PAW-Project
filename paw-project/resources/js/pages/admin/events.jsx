@@ -8,7 +8,6 @@ import {
     ReceiptText,
     Search,
     Shapes,
-    Ticket,
     Trash2,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -16,24 +15,37 @@ import { Button } from '@/components/ui/button';
 import { EventDetailsModal } from '@/components/admin/events/EventDetailsModal';
 import { EventFormModal } from '@/components/admin/events/EventFormModal';
 import { DeleteEventModal } from '@/components/admin/events/DeleteEventModal';
-import AdminLayout from '@/layouts/admin-layout';
 import { index as bookingsIndex } from '@/routes/admin/bookings';
 import { index as categoriesIndex } from '@/routes/admin/categories';
 import { index as venuesIndex } from '@/routes/admin/venues';
-import { index as eventsIndex } from '@/routes/admin/events';
+import {
+    create,
+    edit,
+    show,
+    index as eventsIndex,
+} from '@/routes/admin/events';
 
 const number = new Intl.NumberFormat('en-US');
 
 function formatPrice(val) {
     const num = Number(val);
-    if (!num || num === 0) return <span className="font-semibold text-emerald-600">Free</span>;
-    return <span className="font-semibold text-agendain-purple">{'Rp' + num.toLocaleString('id-ID')}</span>;
+    if (!num || num === 0)
+        return <span className="font-semibold text-emerald-600">Free</span>;
+    return (
+        <span className="font-semibold text-agendain-purple">
+            {'Rp' + num.toLocaleString('id-ID')}
+        </span>
+    );
 }
 
 function formatDate(dateStr) {
     if (!dateStr) return '-';
     const d = new Date(dateStr);
-    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+    return d.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+    });
 }
 
 function getCategoryColor(name) {
@@ -51,10 +63,16 @@ function getEventThumbnail(title) {
     if (title.toLowerCase().includes('design')) {
         return 'https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&w=120&q=80';
     }
-    if (title.toLowerCase().includes('music') || title.toLowerCase().includes('indie')) {
+    if (
+        title.toLowerCase().includes('music') ||
+        title.toLowerCase().includes('indie')
+    ) {
         return 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=120&q=80';
     }
-    if (title.toLowerCase().includes('ai') || title.toLowerCase().includes('tech')) {
+    if (
+        title.toLowerCase().includes('ai') ||
+        title.toLowerCase().includes('tech')
+    ) {
         return 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=120&q=80';
     }
     return 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=120&q=80';
@@ -69,9 +87,26 @@ export default function EventsAdmin({
     dialog,
 }) {
     const [search, setSearch] = useState(filters.search || '');
-    const [selectedCategory, setSelectedCategory] = useState(filters.category_id || '');
+    const [selectedCategory, setSelectedCategory] = useState(
+        filters.category_id || '',
+    );
     const [selectedStatus, setSelectedStatus] = useState(filters.status || '');
-    const [modalState, setModalState] = useState(dialog || null);
+    const [deleteEvent, setDeleteEvent] = useState(null);
+    const modalState = deleteEvent
+        ? { mode: 'delete', event: deleteEvent }
+        : dialog;
+    const options = { query: filters };
+
+    function closeDialog() {
+        setDeleteEvent(null);
+        if (dialog) {
+            router.get(
+                eventsIndex.url(options),
+                {},
+                { preserveState: true, preserveScroll: true, replace: true },
+            );
+        }
+    }
 
     function handleFilter(changes = {}) {
         router.get(
@@ -87,7 +122,7 @@ export default function EventsAdmin({
     }
 
     return (
-        <AdminLayout>
+        <>
             <Head title="Event Management — Agendain Admin" />
 
             {/* Top Status Bar */}
@@ -97,7 +132,9 @@ export default function EventsAdmin({
                         CAPSTONE STUDENT PROJECT
                     </span>
                     <span className="text-slate-300">•</span>
-                    <span className="font-semibold text-slate-700">AGENDAIN CORE</span>
+                    <span className="font-semibold text-slate-700">
+                        AGENDAIN CORE
+                    </span>
                 </div>
                 <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50 px-2.5 py-1 text-[11px] font-medium text-emerald-700">
                     <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -111,7 +148,8 @@ export default function EventsAdmin({
                     Admin Management Dashboard
                 </h1>
                 <p className="mt-1 text-xs text-agendain-text-muted">
-                    Manage events, categories, venues, and user bookings in one unified interface.
+                    Manage events, categories, venues, and user bookings in one
+                    unified interface.
                 </p>
             </div>
 
@@ -231,7 +269,7 @@ export default function EventsAdmin({
             </div>
 
             {/* Event Management Main Card */}
-            <div className="rounded-2xl border border-agendain-border-card bg-white p-5 sm:p-6 shadow-xs">
+            <div className="rounded-2xl border border-agendain-border-card bg-white p-5 shadow-xs sm:p-6">
                 {/* Section Header */}
                 <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
                     <div>
@@ -239,11 +277,18 @@ export default function EventsAdmin({
                             Event Management
                         </h2>
                         <p className="mt-0.5 text-xs text-agendain-text-muted">
-                            Create, inspect, update schedules, and track ticket allotments.
+                            Create, inspect, update schedules, and track ticket
+                            allotments.
                         </p>
                     </div>
                     <Button
-                        onClick={() => setModalState({ mode: 'create', event: null })}
+                        onClick={() =>
+                            router.get(
+                                create.url(options),
+                                {},
+                                { preserveState: true, preserveScroll: true },
+                            )
+                        }
                         className="inline-flex items-center gap-2 rounded-xl bg-agendain-purple px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-agendain-purple-hover"
                     >
                         <Plus size={16} />
@@ -260,8 +305,11 @@ export default function EventsAdmin({
                         }}
                         className="flex flex-1 flex-wrap items-center gap-2 sm:max-w-md"
                     >
-                        <div className="relative flex-1 min-w-[200px]">
-                            <Search size={15} className="absolute top-2.5 left-3 text-slate-400" />
+                        <div className="relative min-w-[200px] flex-1">
+                            <Search
+                                size={15}
+                                className="absolute top-2.5 left-3 text-slate-400"
+                            />
                             <input
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
@@ -318,99 +366,124 @@ export default function EventsAdmin({
                     <table className="w-full border-collapse text-left text-xs">
                         <thead>
                             <tr className="border-b border-slate-100 bg-[#FAF9FD] text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
-                                <th className="py-3 px-4">EVENT DETAILS</th>
-                                <th className="py-3 px-4">CATEGORY</th>
-                                <th className="py-3 px-4">SCHEDULE</th>
-                                <th className="py-3 px-4">VENUE</th>
-                                <th className="py-3 px-4">TICKET PRICE</th>
-                                <th className="py-3 px-4">QUOTA / SOLD</th>
-                                <th className="py-3 px-4">STATUS</th>
-                                <th className="py-3 px-4 text-right">ACTIONS</th>
+                                <th className="px-4 py-3">EVENT DETAILS</th>
+                                <th className="px-4 py-3">CATEGORY</th>
+                                <th className="px-4 py-3">SCHEDULE</th>
+                                <th className="px-4 py-3">VENUE</th>
+                                <th className="px-4 py-3">TICKET PRICE</th>
+                                <th className="px-4 py-3">QUOTA / SOLD</th>
+                                <th className="px-4 py-3">STATUS</th>
+                                <th className="px-4 py-3 text-right">
+                                    ACTIONS
+                                </th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                             {events.data.length === 0 ? (
                                 <tr>
-                                    <td colSpan={8} className="py-10 text-center text-slate-400">
-                                        No events found. Click "+ Add Event" to create one.
+                                    <td
+                                        colSpan={8}
+                                        className="py-10 text-center text-slate-400"
+                                    >
+                                        No events found. Click "+ Add Event" to
+                                        create one.
                                     </td>
                                 </tr>
                             ) : (
                                 events.data.map((item) => {
                                     const sold = Number(item.sold_tickets ?? 0);
                                     const quota = Number(item.quota ?? 1);
-                                    const percent = Math.min(100, Math.round((sold / quota) * 100));
+                                    const percent = Math.min(
+                                        100,
+                                        Math.round((sold / quota) * 100),
+                                    );
 
                                     return (
-                                        <tr key={item.id} className="transition hover:bg-slate-50/60">
+                                        <tr
+                                            key={item.id}
+                                            className="transition hover:bg-slate-50/60"
+                                        >
                                             {/* EVENT DETAILS */}
-                                            <td className="py-3.5 px-4">
+                                            <td className="px-4 py-3.5">
                                                 <div className="flex items-center gap-3">
                                                     <img
-                                                        src={getEventThumbnail(item.title)}
+                                                        src={getEventThumbnail(
+                                                            item.title,
+                                                        )}
                                                         alt={item.title}
                                                         className="h-10 w-10 shrink-0 rounded-lg object-cover shadow-2xs"
                                                     />
                                                     <div className="min-w-0">
-                                                        <p className="font-bold text-slate-900 truncate">
+                                                        <p className="truncate font-bold text-slate-900">
                                                             {item.title}
                                                         </p>
                                                         <p className="text-[11px] font-medium text-slate-400">
-                                                            ID: #{'EVT-' + (item.id + 1080)}
+                                                            ID: #
+                                                            {'EVT-' +
+                                                                (item.id +
+                                                                    1080)}
                                                         </p>
                                                     </div>
                                                 </div>
                                             </td>
 
                                             {/* CATEGORY */}
-                                            <td className="py-3.5 px-4 whitespace-nowrap">
+                                            <td className="px-4 py-3.5 whitespace-nowrap">
                                                 <span
                                                     className={`inline-block rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${getCategoryColor(
                                                         item.category?.name,
                                                     )}`}
                                                 >
-                                                    {item.category?.name ?? 'General'}
+                                                    {item.category?.name ??
+                                                        'General'}
                                                 </span>
                                             </td>
 
                                             {/* SCHEDULE */}
-                                            <td className="py-3.5 px-4 whitespace-nowrap">
+                                            <td className="px-4 py-3.5 whitespace-nowrap">
                                                 <p className="font-medium text-slate-800">
                                                     {formatDate(item.date)}
                                                 </p>
                                                 <p className="text-[11px] text-slate-400">
-                                                    {item.time ? item.time.slice(0, 5) : '09:00'} WIB
+                                                    {item.time
+                                                        ? item.time.slice(0, 5)
+                                                        : '09:00'}{' '}
+                                                    WIB
                                                 </p>
                                             </td>
 
                                             {/* VENUE */}
-                                            <td className="py-3.5 px-4 whitespace-nowrap font-medium text-slate-700">
+                                            <td className="px-4 py-3.5 font-medium whitespace-nowrap text-slate-700">
                                                 {item.venue?.name ?? '-'}
                                             </td>
 
                                             {/* TICKET PRICE */}
-                                            <td className="py-3.5 px-4 whitespace-nowrap">
+                                            <td className="px-4 py-3.5 whitespace-nowrap">
                                                 {formatPrice(item.price)}
                                             </td>
 
                                             {/* QUOTA / SOLD */}
-                                            <td className="py-3.5 px-4 min-w-[140px]">
-                                                <div className="flex items-center justify-between text-[11px] mb-1 font-semibold">
+                                            <td className="min-w-[140px] px-4 py-3.5">
+                                                <div className="mb-1 flex items-center justify-between text-[11px] font-semibold">
                                                     <span className="text-slate-700">
                                                         {sold} / {quota}
                                                     </span>
-                                                    <span className="text-slate-400">{percent}%</span>
+                                                    <span className="text-slate-400">
+                                                        {percent}%
+                                                    </span>
                                                 </div>
-                                                <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                                                <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
                                                     <div
                                                         className="h-full rounded-full bg-agendain-purple"
-                                                        style={{ width: `${percent}%` }}
+                                                        style={{
+                                                            width: `${percent}%`,
+                                                        }}
                                                     />
                                                 </div>
                                             </td>
 
                                             {/* STATUS */}
-                                            <td className="py-3.5 px-4 whitespace-nowrap">
+                                            <td className="px-4 py-3.5 whitespace-nowrap">
                                                 <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-700">
                                                     <span className="h-2 w-2 rounded-full bg-emerald-500" />
                                                     Active
@@ -418,11 +491,23 @@ export default function EventsAdmin({
                                             </td>
 
                                             {/* ACTIONS */}
-                                            <td className="py-3.5 px-4 whitespace-nowrap text-right">
+                                            <td className="px-4 py-3.5 text-right whitespace-nowrap">
                                                 <div className="inline-flex items-center gap-1">
                                                     <button
                                                         type="button"
-                                                        onClick={() => setModalState({ mode: 'show', event: item })}
+                                                        onClick={() =>
+                                                            router.get(
+                                                                show.url(
+                                                                    item.id,
+                                                                    options,
+                                                                ),
+                                                                {},
+                                                                {
+                                                                    preserveState: true,
+                                                                    preserveScroll: true,
+                                                                },
+                                                            )
+                                                        }
                                                         className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-agendain-purple"
                                                         title="Inspect Event"
                                                     >
@@ -430,7 +515,19 @@ export default function EventsAdmin({
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setModalState({ mode: 'edit', event: item })}
+                                                        onClick={() =>
+                                                            router.get(
+                                                                edit.url(
+                                                                    item.id,
+                                                                    options,
+                                                                ),
+                                                                {},
+                                                                {
+                                                                    preserveState: true,
+                                                                    preserveScroll: true,
+                                                                },
+                                                            )
+                                                        }
                                                         className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-agendain-purple"
                                                         title="Edit Event"
                                                     >
@@ -438,7 +535,9 @@ export default function EventsAdmin({
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={() => setModalState({ mode: 'delete', event: item })}
+                                                        onClick={() =>
+                                                            setDeleteEvent(item)
+                                                        }
                                                         className="rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600"
                                                         title="Delete Event"
                                                     >
@@ -457,7 +556,8 @@ export default function EventsAdmin({
                 {/* Pagination */}
                 <div className="mt-5 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
                     <p>
-                        Showing {events.from ?? 0} – {events.to ?? 0} of {events.total ?? 0} events
+                        Showing {events.from ?? 0} – {events.to ?? 0} of{' '}
+                        {events.total ?? 0} events
                     </p>
                     <div className="flex items-center gap-1">
                         {events.prev_page_url ? (
@@ -474,7 +574,11 @@ export default function EventsAdmin({
                         )}
 
                         {events.links
-                            .filter((l) => !l.label.includes('Previous') && !l.label.includes('Next'))
+                            .filter(
+                                (l) =>
+                                    !l.label.includes('Previous') &&
+                                    !l.label.includes('Next'),
+                            )
                             .map((page, idx) => (
                                 <Link
                                     key={idx}
@@ -510,33 +614,40 @@ export default function EventsAdmin({
                 <EventFormModal
                     mode="create"
                     event={null}
-                    categories={categories}
+                    categories={categories.filter(
+                        (category) =>
+                            category.status === 'active' ||
+                            category.id === modalState.event?.category_id,
+                    )}
                     venues={venues}
-                    onClose={() => setModalState(null)}
+                    onClose={closeDialog}
                 />
             )}
             {modalState?.mode === 'edit' && (
                 <EventFormModal
                     mode="edit"
                     event={modalState.event}
-                    categories={categories}
+                    categories={categories.filter(
+                        (category) =>
+                            category.status === 'active' ||
+                            category.id === modalState.event?.category_id,
+                    )}
                     venues={venues}
-                    onClose={() => setModalState(null)}
+                    onClose={closeDialog}
                 />
             )}
             {modalState?.mode === 'show' && (
                 <EventDetailsModal
                     event={modalState.event}
-                    onClose={() => setModalState(null)}
+                    onClose={closeDialog}
                 />
             )}
             {modalState?.mode === 'delete' && (
                 <DeleteEventModal
                     event={modalState.event}
-                    onClose={() => setModalState(null)}
+                    onClose={closeDialog}
                 />
             )}
-        </AdminLayout>
+        </>
     );
 }
-

@@ -97,8 +97,9 @@ function DeleteBooking({ booking, filters, onClose }) {
                     <DialogTitle>Delete this booking?</DialogTitle>
                     <DialogDescription>
                         Permanently remove {booking.booking_code} for{' '}
-                        {booking.user.name}? This cannot be undone. Cancellation
-                        keeps the booking history.
+                        {booking.attendee_name ?? booking.user.name}? This
+                        cannot be undone. Cancellation keeps the booking
+                        history.
                     </DialogDescription>
                 </DialogHeader>
                 <InputError message={form.errors.booking} />
@@ -180,19 +181,25 @@ function BookingDrawer({ booking, filters, onClose }) {
                                 </p>
                                 <div className="flex items-start gap-3">
                                     <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-agendain-badge text-xs font-semibold text-agendain-purple">
-                                        {booking.user.name
+                                        {(
+                                            booking.attendee_name ??
+                                            booking.user.name
+                                        )
                                             .slice(0, 2)
                                             .toUpperCase()}
                                     </span>
                                     <div className="min-w-0">
                                         <p className="text-sm font-semibold">
-                                            {booking.user.name}
+                                            {booking.attendee_name ??
+                                                booking.user.name}
                                         </p>
                                         <p className="mt-1 text-xs break-all text-agendain-text-muted">
-                                            {booking.user.email}
+                                            {booking.attendee_email ??
+                                                booking.user.email}
                                         </p>
                                         <p className="mt-1 text-xs text-agendain-purple">
-                                            {booking.user.phone_number ||
+                                            {(booking.attendee_phone ??
+                                                booking.user.phone_number) ||
                                                 'No phone number provided'}
                                         </p>
                                     </div>
@@ -481,11 +488,7 @@ export default function Dashboard({
                                 ? venuesIndex()
                                 : dashboard();
                     return (
-                        <Link
-                            key={key}
-                            href={href}
-                            className={className}
-                        >
+                        <Link key={key} href={href} className={className}>
                             {content}
                         </Link>
                     );
@@ -662,13 +665,18 @@ export default function Dashboard({
                                     </td>
                                     <td className="px-3 py-5">
                                         <p className="font-semibold">
-                                            {booking.user.name}
+                                            {booking.attendee_name ??
+                                                booking.user.name}
                                         </p>
                                         <p
                                             className="mt-1 max-w-40 truncate text-[10px] text-agendain-text-muted"
-                                            title={booking.user.email}
+                                            title={
+                                                booking.attendee_email ??
+                                                booking.user.email
+                                            }
                                         >
-                                            {booking.user.email}
+                                            {booking.attendee_email ??
+                                                booking.user.email}
                                         </p>
                                     </td>
                                     <td className="max-w-44 px-3 py-5 leading-relaxed">

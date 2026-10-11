@@ -18,7 +18,8 @@ class EventRequest extends FormRequest
     public function rules(): array
     {
         $venueId = $this->input('venue_id');
-        $venue = $venueId ? Venue::find($venueId) : null;
+        $validatedVenueId = filter_var($venueId, FILTER_VALIDATE_INT);
+        $venue = $validatedVenueId !== false ? Venue::query()->find($validatedVenueId) : null;
         $maxQuota = $venue ? $venue->capacity : 100000;
 
         return [
@@ -29,8 +30,8 @@ class EventRequest extends FormRequest
             'whats_included' => ['nullable', 'string', 'max:5000'],
             'what_to_bring' => ['nullable', 'string', 'max:5000'],
             'date' => ['required', 'date'],
-            'time' => ['required', 'string'],
-            'price' => ['required', 'numeric', 'min:0'],
+            'time' => ['required', 'string', 'regex:/^([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/'],
+            'price' => ['required', 'numeric', 'min:0', 'max:9999999999.99', 'decimal:0,2'],
             'quota' => ['required', 'integer', 'min:1', 'max:'.$maxQuota],
             'status' => ['required', Rule::in([
                 Event::STATUS_DRAFT,
@@ -59,4 +60,3 @@ class EventRequest extends FormRequest
         ];
     }
 }
-
