@@ -18,16 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { show } from '@/routes/events';
 
-const categories = [
-    'All',
-    'Workshop',
-    'Music',
-    'Technology',
-    'Competition',
-    'Seminar',
-];
-
-export default function Events({ events }) {
+export default function Events({ events, categories }) {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('All');
     const [page, setPage] = useState(1);
@@ -61,7 +52,7 @@ export default function Events({ events }) {
                 </div>
                 <span className="rounded-full border border-agendain-border-card bg-white px-3 py-2 text-[11px] text-agendain-text-muted">
                     <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-agendain-purple" />{' '}
-                    Preview collection
+                    Upcoming events
                 </span>
             </section>
             <section
@@ -85,7 +76,7 @@ export default function Events({ events }) {
                     />
                 </div>
                 <div className="flex flex-wrap gap-1.5">
-                    {categories.map((item) => (
+                    {['All', ...categories].map((item) => (
                         <button
                             key={item}
                             aria-pressed={category === item}

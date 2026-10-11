@@ -18,6 +18,9 @@ use Illuminate\Support\Str;
  * @property int $ticket_quantity
  * @property string $total_price
  * @property string $status
+ * @property string|null $attendee_name
+ * @property string|null $attendee_email
+ * @property string|null $attendee_phone
  * @property CarbonImmutable $booking_date
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
@@ -30,6 +33,9 @@ use Illuminate\Support\Str;
     'total_price',
     'status',
     'booking_date',
+    'attendee_name',
+    'attendee_email',
+    'attendee_phone',
 ])]
 class Booking extends Model
 {

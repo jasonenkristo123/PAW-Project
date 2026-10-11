@@ -199,12 +199,9 @@ export default function Bookings({ bookings }) {
                                     <p className="mb-2 truncate font-mono text-[10px] text-agendain-purple">
                                         {booking.code}
                                     </p>
-                                    <Link
-                                        href={show(booking.event.id)}
-                                        className="text-sm font-semibold hover:text-agendain-purple"
-                                    >
+                                    <h3 className="text-sm font-semibold">
                                         {booking.event.title}
-                                    </Link>
+                                    </h3>
                                     <div className="mt-3 grid gap-2 sm:grid-cols-2">
                                         <p className="flex items-center gap-1.5 text-[11px] text-agendain-text-muted">
                                             <CalendarDays
@@ -251,15 +248,17 @@ export default function Bookings({ bookings }) {
                                                 <Ticket size={13} /> View pass
                                             </button>
                                         )}
-                                        <Link
-                                            href={show(booking.event.id)}
-                                            className="inline-flex items-center gap-1.5 text-[11px] text-agendain-text-muted"
-                                        >
-                                            {booking.status === 'cancelled'
-                                                ? 'Book again'
-                                                : 'View event'}
-                                            <ArrowRight size={12} />
-                                        </Link>
+                                        {booking.event.discoverable && (
+                                            <Link
+                                                href={show(booking.event.id)}
+                                                className="inline-flex items-center gap-1.5 text-[11px] text-agendain-text-muted"
+                                            >
+                                                {booking.status === 'cancelled'
+                                                    ? 'Book again'
+                                                    : 'View event'}
+                                                <ArrowRight size={12} />
+                                            </Link>
+                                        )}
                                         {['confirmed', 'pending'].includes(
                                             booking.status,
                                         ) && (
@@ -274,7 +273,7 @@ export default function Bookings({ bookings }) {
                                         )}
                                         {booking.status === 'pending' && (
                                             <span className="inline-flex items-center gap-1 text-[10px] text-amber-700">
-                                                <Clock3 size={11} /> Sample
+                                                <Clock3 size={11} />
                                                 pending reservation
                                             </span>
                                         )}
@@ -319,7 +318,7 @@ export default function Bookings({ bookings }) {
                             <div className="overflow-hidden rounded-2xl border border-agendain-purple/15 bg-agendain-surface-soft">
                                 <div className="border-b border-dashed border-agendain-purple/20 p-5">
                                     <p className="mb-2 text-[10px] font-semibold tracking-widest text-agendain-purple uppercase">
-                                        Agendain · Demo pass
+                                        Agendain · Booking pass
                                     </p>
                                     <h3 className="text-base leading-snug font-semibold">
                                         {selected.event.title}
@@ -375,8 +374,7 @@ export default function Bookings({ bookings }) {
                                 <Printer size={14} /> Print / save pass
                             </Button>
                             <p className="mt-3 text-center text-[10px] leading-relaxed text-agendain-text-muted">
-                                This is a preview pass and is not valid for
-                                venue entry.
+                                Keep this booking reference for your event.
                             </p>
                         </>
                     ) : (
@@ -391,8 +389,8 @@ export default function Bookings({ bookings }) {
                         </div>
                     )}
                     <p className="mt-5 border-t border-agendain-border-header pt-4 text-[10px] leading-relaxed text-agendain-text-muted print:hidden">
-                        Preview bookings are saved for your current session. No
-                        payment is collected.
+                        Your reservations are saved to your account. No payment
+                        is collected.
                     </p>
                 </aside>
             </div>

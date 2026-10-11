@@ -36,7 +36,7 @@ export function VenueLine({ event, className = '' }) {
             className={`flex items-center gap-1.5 text-xs text-agendain-text-muted ${className}`}
         >
             <MapPin size={13} className="shrink-0" />
-            {event.venue}, Jakarta
+            {event.venue}
         </p>
     );
 }

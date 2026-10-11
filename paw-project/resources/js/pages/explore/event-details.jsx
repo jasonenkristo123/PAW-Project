@@ -116,7 +116,7 @@ export default function EventDetails({ event }) {
                                         Time
                                     </p>
                                     <p className="mt-1 text-xs font-medium">
-                                        {event.time}–{event.end_time} WIB
+                                        {event.time} WIB
                                     </p>
                                 </div>
                             </div>
@@ -348,14 +348,15 @@ export default function EventDetails({ event }) {
                                 <Ticket size={16} />
                                 {form.processing
                                     ? 'Reserving…'
-                                    : 'Reserve demo pass'}
+                                    : 'Reserve your seat'}
                             </Button>
                             <p className="flex items-center justify-center gap-1.5 text-[10px] text-agendain-text-muted">
                                 <CheckCircle2
                                     size={12}
                                     className="text-emerald-700"
                                 />{' '}
-                                Preview booking · no payment is collected
+                                Seat reservation · no online payment is
+                                collected
                             </p>
                         </form>
                     ) : (
