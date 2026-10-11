@@ -22,7 +22,7 @@ import { StatusBadge } from '@/components/admin/categories/StatusBadge';
 import { index as bookingsIndex } from '@/routes/admin/bookings';
 import { create, edit, index, show } from '@/routes/admin/categories';
 import { index as venuesIndex } from '@/routes/admin/venues';
-import { index as eventsIndex } from '@/routes/events';
+import { index as eventsIndex } from '@/routes/admin/events';
 import { getCategoryIcon, number } from '@/utils/categories';
 
 function buildPageRange(current, last) {

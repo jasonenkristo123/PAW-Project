@@ -35,6 +35,8 @@ import {
 import { Label } from '@/components/ui/label';
 import { dashboard } from '@/routes/admin';
 import { destroy, exportMethod, show, update } from '@/routes/admin/bookings';
+import { index as categoriesIndex } from '@/routes/admin/categories';
+import { index as eventsIndex } from '@/routes/admin/events';
 import { index as venuesIndex } from '@/routes/admin/venues';
 
 const number = new Intl.NumberFormat('en-US');
@@ -470,26 +472,22 @@ export default function Dashboard({
                             </span>
                         </>
                     );
-                    return key === 'venues' ? (
+                    const href =
+                        key === 'events'
+                            ? eventsIndex()
+                            : key === 'categories'
+                              ? categoriesIndex()
+                              : key === 'venues'
+                                ? venuesIndex()
+                                : dashboard();
+                    return (
                         <Link
                             key={key}
-                            href={venuesIndex()}
+                            href={href}
                             className={className}
                         >
                             {content}
                         </Link>
-                    ) : key === 'bookings' ? (
-                        <Link
-                            key={key}
-                            href={dashboard()}
-                            className={className}
-                        >
-                            {content}
-                        </Link>
-                    ) : (
-                        <span key={key} className={className}>
-                            {content}
-                        </span>
                     );
                 })}
             </div>

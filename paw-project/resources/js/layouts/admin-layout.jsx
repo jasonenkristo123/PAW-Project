@@ -18,6 +18,7 @@ import { logout } from '@/routes';
 import { dashboard } from '@/routes/admin';
 import { index as bookingsIndex } from '@/routes/admin/bookings';
 import { index as categoriesIndex } from '@/routes/admin/categories';
+import { index as eventsAdminIndex } from '@/routes/admin/events';
 import { index as venuesIndex } from '@/routes/admin/venues';
 import { index as eventsIndex } from '@/routes/events';
 
@@ -27,11 +28,12 @@ export default function AdminLayout({ children }) {
         url,
     } = usePage();
 
+    const eventsActive = url.startsWith('/admin/events');
     const categoriesActive = url.startsWith('/admin/categories');
     const venuesActive = url.startsWith('/admin/venues');
     const bookingsActive = url.startsWith('/admin/bookings');
     const dashboardActive =
-        !categoriesActive && !venuesActive && !bookingsActive;
+        !eventsActive && !categoriesActive && !venuesActive && !bookingsActive;
     const [menuOpen, setMenuOpen] = useState(false);
     useFlashToast();
 
@@ -85,11 +87,15 @@ export default function AdminLayout({ children }) {
                         <LayoutDashboard size={17} /> Dashboard (Overview)
                     </Link>
                     <Link
-                        href={eventsIndex()}
+                        href={eventsAdminIndex()}
+                        aria-current={eventsActive ? 'page' : undefined}
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-agendain-surface-soft hover:text-agendain-text"
+                        className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${eventsActive ? 'bg-agendain-badge font-semibold text-agendain-purple' : 'text-slate-600 hover:bg-agendain-surface-soft hover:text-agendain-text'}`}
                     >
                         <CalendarDays size={17} /> Events (CRUD)
+                        {eventsActive && (
+                            <span className="ml-auto h-1.5 w-1.5 rounded-full bg-agendain-purple" />
+                        )}
                     </Link>
                     <Link
                         href={categoriesIndex()}

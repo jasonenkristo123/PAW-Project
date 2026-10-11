@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\ExploreController;
 use Illuminate\Support\Facades\Route;
@@ -14,7 +15,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('events/{event}/bookings', [ExploreController::class, 'book'])->whereNumber('event')->name('events.book');
     Route::get('my-bookings', [ExploreController::class, 'myBookings'])->name('bookings.index');
     Route::post('my-bookings/{booking}/cancel', [ExploreController::class, 'cancel'])->name('bookings.cancel');
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', function () {
+        if (auth()->user()?->role === \App\Models\User::ROLE_ADMIN) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('events.index');
+    })->name('dashboard');
 });
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -26,6 +32,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('bookings/{booking}', [DashboardController::class, 'destroy'])->name('bookings.destroy');
     Route::resource('venues', VenueController::class);
     Route::resource('categories', CategoryController::class);
+    Route::resource('events', EventController::class);
 });
 
 require __DIR__.'/settings.php';

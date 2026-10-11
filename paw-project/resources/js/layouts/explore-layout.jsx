@@ -4,7 +4,6 @@ import {
     CalendarDays,
     ChevronDown,
     Menu,
-    ShieldCheck,
     Ticket,
     X,
 } from 'lucide-react';
@@ -19,7 +18,6 @@ import { useFlashToast } from '@/hooks/use-flash-toast';
 import { home } from '@/routes';
 import { index as eventsIndex } from '@/routes/events';
 import { index as bookingsIndex } from '@/routes/bookings';
-import { dashboard as adminIndex } from '@/routes/admin';
 
 export default function ExploreLayout({ children }) {
     const {
@@ -41,16 +39,6 @@ export default function ExploreLayout({ children }) {
             active: url.startsWith('/my-bookings'),
             icon: Ticket,
         },
-        ...(auth.user.role === 'admin'
-            ? [
-                  {
-                      title: 'Admin',
-                      href: adminIndex(),
-                      active: false,
-                      icon: ShieldCheck,
-                  },
-              ]
-            : []),
     ];
 
     return (
