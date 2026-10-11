@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\VenueController;
 use App\Http\Controllers\ExploreController;
@@ -24,6 +25,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('bookings/{booking}', [DashboardController::class, 'update'])->name('bookings.update');
     Route::delete('bookings/{booking}', [DashboardController::class, 'destroy'])->name('bookings.destroy');
     Route::resource('venues', VenueController::class);
+    Route::resource('categories', CategoryController::class);
 });
 
 require __DIR__.'/settings.php';
